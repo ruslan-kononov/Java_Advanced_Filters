@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class ConnectionUtils {
     private static String USER_NAME = "root";
     private static String USER_PASSWORD = "ruslan97";
-    private  static String URL = "jdbc:mysql://localhost/shop";
+    private  static String URL = "jdbc:mysql://localhost/shop?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
     public static Connection openConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, NoSuchMethodException, InvocationTargetException {
         Class.forName ("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();

@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/login")
@@ -27,14 +28,15 @@ public class LoginServlet extends HttpServlet {
         }
 
         if(user.getPassword().equals(password)) {
-            request.setAttribute("userEmail", email);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("userEmail", email);
             request.getRequestDispatcher("cabinet.jsp").forward(request, response);
         }
 
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 }

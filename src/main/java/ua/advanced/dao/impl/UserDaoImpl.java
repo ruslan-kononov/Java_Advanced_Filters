@@ -129,12 +129,15 @@ public class UserDaoImpl implements UserDao{
             try (PreparedStatement prSt = connection.prepareStatement(READ_BY_EMAIL)) {
                 prSt.setString(1, email);
                 try (ResultSet resultSet = prSt.executeQuery()) {
-                    resultSet.next();
+                    boolean recordExists = resultSet.next();
+                    if(!recordExists) return user;
                     String first_name = resultSet.getString("first_name");
                     String last_name = resultSet.getString("last_name");
                     String role = resultSet.getString("role");
                     String password = resultSet.getString("password");
                     user = new User(email, first_name, last_name, role, password);
+                }catch (Exception e){
+                    logger.error(e);
                 }
             }
         }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
