@@ -11,6 +11,6 @@
     <title>Cabinet</title>
 </head>
 <body>
-    <h2>Welcome to the cabinet <%=session.getAttribute("userEmail")%>!</h2>
+    <h2>Welcome to the cabinet!</h2>
 </body>
 </html>

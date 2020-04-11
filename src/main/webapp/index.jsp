@@ -17,31 +17,44 @@
     <title>Ristorante Con Fusion: About Us</title>
 </head>
 <body>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    You are <b>successfully registered!</b>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
 <div class="login-page">
     <div class="form">
-        <form class="register-form">
-            <input type="text" placeholder="first name" name="first_name"/>
-            <input type="text" placeholder="last name" name="last_name"/>
-            <input type="text" placeholder="email address" name="email"/>
+        <form class="register-form" method="post">
+            <input type="text" placeholder="first name" name="first_name" class="firstName"/>
+            <input type="text" placeholder="last name" name="last_name" class="lastName"/>
+            <input type="text" placeholder="email address" name="email" class="email"/>
             <input type="password" placeholder="password" name="password" id="pass1"/>
             <input type="password" placeholder="confirm password" name="password" id="pass2"/>
-            <button class="register">create</button>
+            <button class="register" type="button">create</button>
             <p class="message">Already registered? <a href="#">Sign In</a></p>
         </form>
-        <form class="login-form" action="login" method="post">
-            <input type="text" placeholder="username" name="login"/>
-            <input type="password" placeholder="password" name="password"/>
-            <button>login</button>
+        <form class="login-form" method="post">
+            <input type="text" placeholder="username" name="login" class="email"/>
+            <input type="password" placeholder="password" name="password" class="password"/>
+            <button class="log" type="button">login</button>
             <p class="message">Not registered? <a href="#">Create an account</a></p>
         </form>
     </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        You are <b>successfully registered!</b>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        All the fields should be filled in!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Check the correctness of the entered email and password!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 </div>
+<jsp:include page="footer.jsp"/>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
