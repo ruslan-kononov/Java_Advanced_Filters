@@ -32,7 +32,6 @@ public class ProductDaoImpl implements ProductDao {
                 prSt.setString(2, product.getDescription());
                 prSt.setDouble(3, product.getPrice());
                 prSt.executeUpdate();
-                throw new SQLException();
             }
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
                                         | IllegalAccessException |ClassNotFoundException e) {

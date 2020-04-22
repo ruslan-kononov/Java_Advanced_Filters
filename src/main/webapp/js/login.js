@@ -109,6 +109,7 @@ $(".log").click(function () {
     var password = $(".login-form input.password");
 
     $(".alert.alert-danger").hide();
+    $(".alert.alert-success").hide();
     $(".alert.alert-warning").hide();
 
     email.removeClass("red");

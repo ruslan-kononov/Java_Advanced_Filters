@@ -14,7 +14,7 @@
           integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
           crossorigin="anonymous">
     <link rel="stylesheet" href="css/login.css">
-    <title>Ristorante Con Fusion: About Us</title>
+    <title>ReadMore: start page</title>
 </head>
 <body>
 <div class="login-page">

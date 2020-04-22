@@ -22,7 +22,7 @@
 </head>
 <body>
     <!-- Footer -->
-    <footer class="page-footer font-small blue-grey lighten-5" style="background-color: white;color: #4d4d4d">
+    <footer class="page-footer font-small blue-grey lighten-5 bg-light" style="color: #4d4d4d">
         <div>
             <div class="container">
                 <!-- Grid row-->
