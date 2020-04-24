@@ -73,3 +73,13 @@ $('.description').on('keyup', function () {
         $(".description").removeClass("red");
 });
 
+$('button.buy').click(function () {
+    var productId = $('button.buy').attr("product-id");
+    $.post("bucket",{'productId':productId},function (data) {
+        if(data == 'Success'){
+            $('#exampleModalCenter .close').click();
+            alert("Item is added to the basket!");
+        }
+    });
+})
+
