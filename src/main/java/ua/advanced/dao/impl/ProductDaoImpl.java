@@ -45,12 +45,13 @@ public class ProductDaoImpl implements ProductDao {
         Product product = null;
         try (Connection connection = ConnectionUtils.openConnection()) {
             try (PreparedStatement prSt = connection.prepareStatement(READ_BY_ID)) {
+                prSt.setInt(1, id);
                 try (ResultSet resultSet = prSt.executeQuery()) {
                     resultSet.next();
                     String name = resultSet.getString("name");
                     String description = resultSet.getString("description");
                     Double price = resultSet.getDouble("price");
-                    product = new Product(name, description, price);
+                    product = new Product(id, name, description, price);
                 }
             }
         }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException

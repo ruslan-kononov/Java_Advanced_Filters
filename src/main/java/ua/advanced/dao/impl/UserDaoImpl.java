@@ -131,11 +131,12 @@ public class UserDaoImpl implements UserDao{
                 try (ResultSet resultSet = prSt.executeQuery()) {
                     boolean recordExists = resultSet.next();
                     if(!recordExists) return user;
+                    Integer id = resultSet.getInt("id");
                     String first_name = resultSet.getString("first_name");
                     String last_name = resultSet.getString("last_name");
                     String role = resultSet.getString("role");
                     String password = resultSet.getString("password");
-                    user = new User(email, first_name, last_name, role, password);
+                    user = new User(id, email, first_name, last_name, role, password);
                 }catch (Exception e){
                     logger.error(e);
                 }

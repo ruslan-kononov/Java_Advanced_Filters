@@ -28,7 +28,6 @@ public class BucketDaoImpl implements BucketDao {
                 prSt.setInt(2, bucket.getProductId());
                 prSt.setDate(3, new Date(bucket.getPurchaseDate().getTime()));
                 prSt.executeUpdate();
-                throw new SQLException();
             } catch (SQLException e) {
                 logger.error(e);
             }
@@ -44,6 +43,7 @@ public class BucketDaoImpl implements BucketDao {
         Bucket bucket = null;
         try (Connection connection = ConnectionUtils.openConnection()) {
             try (PreparedStatement prSt = connection.prepareStatement(READ_BY_ID)) {
+                prSt.setInt(1, id);
                 try (ResultSet resultSet = prSt.executeQuery()) {
                     resultSet.next();
                     Integer userId = resultSet.getInt("user_id");
@@ -69,8 +69,6 @@ public class BucketDaoImpl implements BucketDao {
                         Integer id = result.getInt("id");
                         Integer userId = result.getInt("user_id");
                         Integer productId = result.getInt("product_id");
-                        ;
-                        ;
                         java.util.Date purchaseDate = result.getDate("purchase_date");
                         bucketList.add(new Bucket(id, userId, productId, purchaseDate));
                     }
