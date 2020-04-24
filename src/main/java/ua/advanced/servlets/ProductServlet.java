@@ -24,7 +24,6 @@ public class ProductServlet extends HttpServlet {
         String price = request.getParameter("price");
         String description = request.getParameter("description");
 
-
         if (!firstName.isEmpty() && !price.isEmpty() && !description.isEmpty()) {
             productService.create(new Product(firstName,description,Double.valueOf(price)));
 
@@ -37,7 +36,10 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String productId = request.getParameter("id");
+        Product product = productService.read(Integer.parseInt(productId));
+        request.setAttribute("product", product);
+        request.getRequestDispatcher("product.jsp").forward(request, response);
     }
 
     @Override
