@@ -26,7 +26,7 @@
                     <a class="nav-link text-success" href="<%=request.getContextPath()%>/cabinet.jsp">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-success" href="<%=request.getContextPath()%>/newProduct.jsp">Add new item</a>
+                    <a class="nav-link text-success" href="<%=request.getContextPath()%>/new_product.jsp">Add new item</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-success" href="<%=request.getContextPath()%>/bucket.jsp">Bucket</a>
