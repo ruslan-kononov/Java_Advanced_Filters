@@ -1,3 +1,7 @@
+body{
+    visibility: hidden;
+}
+
 :root {
     --jumbotron-padding-y: 3rem;
 }
@@ -5,7 +9,7 @@
 .jumbotron {
     padding-top: var(--jumbotron-padding-y);
     padding-bottom: var(--jumbotron-padding-y);
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
     background-color: #fff;
 }
 @media (min-width: 768px) {

@@ -3,6 +3,7 @@ package ua.advanced.service.impl;
 import ua.advanced.dao.BucketDao;
 import ua.advanced.dao.impl.BucketDaoImpl;
 import ua.advanced.domain.Bucket;
+import ua.advanced.dto.UserOrder;
 import ua.advanced.service.BucketService;
 
 import java.sql.SQLException;
@@ -33,6 +34,7 @@ public class BucketServiceImpl implements BucketService {
         return bucketDaoImpl.read(id);
     }
 
+
     @Override
     public Bucket update(Bucket bucket) throws SQLException {
         return bucketDaoImpl.update(bucket);
@@ -46,5 +48,15 @@ public class BucketServiceImpl implements BucketService {
     @Override
     public List<Bucket> readAll() {
         return bucketDaoImpl.readAll();
+    }
+
+    @Override
+    public List<UserOrder> readAllByUser(int userId) {
+        return bucketDaoImpl.readAllByUser(userId);
+    }
+
+    @Override
+    public Bucket readAllByUserProduct(int userId, int productId) {
+        return bucketDaoImpl.readAllByUserProduct(userId,productId);
     }
 }

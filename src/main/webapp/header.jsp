@@ -12,6 +12,7 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light">
@@ -25,10 +26,10 @@
                 <li class="nav-item active">
                     <a class="nav-link text-success" href="<%=request.getContextPath()%>/cabinet.jsp">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item admin">
                     <a class="nav-link text-success" href="<%=request.getContextPath()%>/new_product.jsp">Add new item</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item user">
                     <a class="nav-link text-success" href="<%=request.getContextPath()%>/bucket.jsp">Bucket</a>
                 </li>
             </ul>

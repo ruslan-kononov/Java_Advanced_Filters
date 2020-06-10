@@ -43,8 +43,7 @@
                         <p class="card-text">Decription: <%=product.getDescription()%></p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#exampleModalCenter">Buy</button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary buy" data-toggle="modal" data-target="#exampleModalCenter" product-id='<%=product.getId()%>'>Buy</button>
                                 </div>
                             <small class="text-muted">9 mins</small>
                             </div>
@@ -72,7 +71,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue shopping</button>
-                <button type="button" class="btn btn-success buy" product-id='<%=product.getId()%>'>Basket/Checkout</button>
+                <button type="button" class="btn btn-success" onclick="window.location.href='<%=request.getContextPath()%>/bucket.jsp'">View Basket</button>
             </div>
         </div>
     </div>

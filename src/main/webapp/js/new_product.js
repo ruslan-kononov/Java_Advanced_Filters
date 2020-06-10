@@ -78,8 +78,22 @@ $('button.buy').click(function () {
     $.post("bucket",{'productId':productId},function (data) {
         if(data == 'Success'){
             $('#exampleModalCenter .close').click();
-            alert("Item is added to the basket!");
         }
     });
-})
+});
+
+$(function() {
+    var role = null;
+    $.get('user-role', function (data) {
+        if (data !== '') {
+            role = data;
+        }
+    }).done(function () {
+        if (role === "ADMINISTRATOR") {
+            $('.user').hide();
+        }else{
+            $('.admin').hide();
+        }
+    });
+});
 

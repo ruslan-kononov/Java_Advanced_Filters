@@ -93,7 +93,6 @@ function validateRegistration() {
                 }
             }]
         });
-        return true;
     }
 }
 
