@@ -1,14 +1,27 @@
 package ua.advanced.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
+@Table(name = "bucket")
 public class Bucket {
+    @Id
     private Integer id;
+    @Column(name = "user_id")
     private Integer userId;
+    @Column(name = "product_id")
     private Integer productId;
+    @Column(name = "purchase_date")
     private Date purchaseDate;
+    @Column(name = "quantity")
     private Integer quantity;
+
+    public Bucket(){}
 
     public Bucket(Integer id, Integer userId, Integer productId, Date purchaseDate, Integer quantity) {
         this.id = id;
