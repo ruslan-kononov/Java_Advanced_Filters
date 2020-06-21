@@ -7,6 +7,7 @@ import java.util.Objects;
 @Table(name = "user")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "email", nullable = false)
     private String email;
