@@ -1,12 +1,24 @@
 package ua.advanced.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "product")
 public class Product {
+    @Id
     private Integer id;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "name")
     private String description;
+    @Column(name = "name", nullable = false)
     private Double price;
+
+    public Product(){}
 
     public Product(String name, String description, Double price) {
         this.name = name;
