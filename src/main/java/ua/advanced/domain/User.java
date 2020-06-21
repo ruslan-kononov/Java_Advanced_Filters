@@ -1,14 +1,27 @@
 package ua.advanced.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
     private Integer id;
+    @Column(name = "email", nullable = false)
     private String email;
+    @Column(name = "first_name", nullable = false)
     private String first_name;
+    @Column(name = "last_name", nullable = false)
     private String last_name;
+    @Column(name = "role", nullable = false)
     private String role;
+    @Column(name = "password", nullable = false)
     private String password;
+
+    public User(){
+
+    }
 
     public User(String email, String first_name, String last_name, String role, String password) {
         this.email = email;
