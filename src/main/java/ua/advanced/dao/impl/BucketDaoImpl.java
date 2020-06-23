@@ -3,43 +3,33 @@ package ua.advanced.dao.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.advanced.dao.BucketDao;
-import ua.advanced.domain.Bucket;
-import ua.advanced.dto.UserOrder;
-import ua.advanced.utils.ConnectionUtils;
+import ua.advanced.domain.Bucket;;
+import ua.advanced.shared.FactoryManager;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BucketDaoImpl implements BucketDao {
 
-    private static String CREATE = "INSERT INTO bucket(user_id,product_id,purchase_date,quantity) VALUES (?,?,?,?)";
-    private static String READ_BY_ID = "SELECT*FROM bucket WHERE id = ?";
-    private static String READ_ALL_BY_USER = "SELECT sb.id, sp.name, sp.price, sb.quantity, sb.purchase_date FROM shop.bucket sb\n" +
-                                                             "JOIN shop.product sp ON sp.id = sb.product_id\n" +
-                                                                                  "AND sb.user_id = ?";
-    private static String READ_ALL_BY_USER_PRODUCT = "SELECT*FROM bucket WHERE user_id=? AND product_id=?";
-    private static String READ_ALL = "SELECT*FROM bucket";
-    private static String UPDATE_BY_ID = "UPDATE bucket SET quantity = ? WHERE id = ?";
-    private static String DELETE_BY_ID = "DELETE FROM bucket WHERE id = ?";
-
     private static Logger logger = LogManager.getLogger(BucketDaoImpl.class);
+    private static EntityManager em = FactoryManager.getEntityManager();
 
     @Override
     public boolean create(Bucket bucket) {
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(CREATE)) {
-                prSt.setInt(1, bucket.getUserId());
-                prSt.setInt(2, bucket.getProductId());
-                prSt.setDate(3, new Date(bucket.getPurchaseDate().getTime()));
-                prSt.setInt(4, bucket.getQuantity());
-                prSt.executeUpdate();
-            } catch (SQLException e) {
-                logger.error(e);
+        EntityTransaction et = null;
+        try {
+            et = em.getTransaction();
+            et.begin();
+            em.persist(bucket);
+            et.commit();
+        }catch (Exception e) {
+            if(et!=null){
+                et.rollback();
             }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
             logger.error(e);
         }
         return true;
@@ -48,95 +38,50 @@ public class BucketDaoImpl implements BucketDao {
     @Override
     public Bucket read(int id) {
         Bucket bucket = null;
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(READ_BY_ID)) {
-                prSt.setInt(1, id);
-                try (ResultSet resultSet = prSt.executeQuery()) {
-                    resultSet.next();
-                    Integer userId = resultSet.getInt("user_id");
-                    Integer productId = resultSet.getInt("product_id");
-                    java.util.Date purchaseDate = resultSet.getDate("purchase_date");
-                    Integer quantity = resultSet.getInt("quantity");
-                    bucket = new Bucket(userId, productId, purchaseDate,quantity);
-                }
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
+        try {
+            bucket = em.find(Bucket.class,id);
+        }catch (Exception e) {
             logger.error(e);
         }
         return bucket;
     }
 
     @Override
-    public List<UserOrder> readAllByUser(int userId) {
-        List<UserOrder> orderList = new ArrayList<>();
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(READ_ALL_BY_USER)) {
-                prSt.setInt(1, userId);
-                try (ResultSet result = prSt.executeQuery()) {
-                    while (result.next()) {
-                        UserOrder order = new UserOrder();
-                        order.bucketId = result.getInt("id");
-                        order.name = result.getString("name");
-                        order.price = result.getDouble("price");
-                        order.quantity = result.getInt("quantity");
-                        order.purchaseDate = result.getDate("purchase_date");
-                        orderList.add(order);
-                    }
-                }
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
+    public List<Bucket> readAllByUser(int userId) {
+        List<Bucket> orderList = new ArrayList<>();
+        try{
+            Query jpqlQuery = em.createQuery("SELECT b FROM Bucket b WHERE b.user.id=:userId");
+            jpqlQuery.setParameter("userId", userId);
+            orderList = (List<Bucket>) jpqlQuery.getResultList();
+        }
+        catch (Exception e) {
             logger.error(e);
         }
         return orderList;
     }
 
     @Override
-    public Bucket readAllByUserProduct(int user_id, int product_id) {
-        Bucket bucket = null;
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(READ_ALL_BY_USER_PRODUCT)) {
-                prSt.setInt(1, user_id);
-                prSt.setInt(2, product_id);
-                try (ResultSet resultSet = prSt.executeQuery()) {
-                    if(resultSet.next()){
-                        resultSet.beforeFirst();
-                        resultSet.next();
-                        Integer bucketId = resultSet.getInt("id");
-                        Integer userId = resultSet.getInt("user_id");
-                        Integer productId = resultSet.getInt("product_id");
-                        java.sql.Date purchaseDate = resultSet.getDate("purchase_date");
-                        Integer quantity = resultSet.getInt("quantity");
-                        bucket = new Bucket(bucketId,userId, productId,purchaseDate,quantity);
-                    }
-                }
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
+    public List<Bucket> readAllByUserProduct(int userId, int productId) {
+        List<Bucket> bucketList = new ArrayList<>();
+        try{
+            String query = "FROM Bucket b WHERE b.user_id = :userId AND b.product_id = :productId";
+            Query jpqlQuery = em.createQuery("SELECT b FROM Bucket b WHERE b.user.id=:userId AND b.product.id=:productId");
+            jpqlQuery.setParameter("userId", userId);
+            jpqlQuery.setParameter("productId", productId);
+            bucketList = (List<Bucket>) jpqlQuery.getResultList();
+        }catch (Exception e) {
             logger.error(e);
         }
-        return bucket;
+        return bucketList;
     }
 
     @Override
     public List<Bucket> readAll() {
         List<Bucket> bucketList = new ArrayList<>();
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(READ_ALL)) {
-                try (ResultSet result = prSt.executeQuery()) {
-                    while (result.next()) {
-                        Integer id = result.getInt("id");
-                        Integer userId = result.getInt("user_id");
-                        Integer productId = result.getInt("product_id");
-                        java.util.Date purchaseDate = result.getDate("purchase_date");
-                        Integer quantity = result.getInt("quantity");
-                        bucketList.add(new Bucket(id, userId, productId, purchaseDate,quantity));
-                    }
-                }
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
+        try{
+            TypedQuery<Bucket> query = em.createQuery("SELECT b FROM Bucket b", Bucket.class);
+            bucketList = query.getResultList();
+        }catch (Exception e) {
             logger.error(e);
         }
         return bucketList;
@@ -145,14 +90,19 @@ public class BucketDaoImpl implements BucketDao {
     @Override
     public Bucket update(Bucket bucket) {
         Integer quantity = bucket.getQuantity()+1;
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(UPDATE_BY_ID)) {
-                prSt.setInt(1, quantity);
-                prSt.setInt(2, bucket.getId());
-                prSt.executeUpdate();
+        EntityTransaction et = null;
+        Bucket bucketFromTable = null;
+        try{
+            et = em.getTransaction();
+            et.begin();
+            bucketFromTable = em.find(Bucket.class, bucket.getId());
+            bucketFromTable.setQuantity(quantity);
+            em.persist(bucketFromTable);
+            et.commit();
+        }catch (Exception e) {
+            if(et!=null){
+                et.rollback();
             }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
             logger.error(e);
         }
         return null;
@@ -160,15 +110,18 @@ public class BucketDaoImpl implements BucketDao {
 
     @Override
     public void delete(int id) {
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(DELETE_BY_ID)) {
-                prSt.setInt(1, id);
-                prSt.executeUpdate();
-            } catch (SQLException e) {
-                logger.error(e);
+        EntityTransaction et = null;
+        Bucket bucket = null;
+        try {
+            et = em.getTransaction();
+            et.begin();
+            bucket = em.find(Bucket.class, id);
+            em.remove(bucket);
+            et.commit();
+        }catch (Exception e) {
+            if(et!=null){
+                et.rollback();
             }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
             logger.error(e);
         }
     }

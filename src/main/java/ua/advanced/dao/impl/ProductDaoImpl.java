@@ -4,38 +4,32 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.advanced.dao.ProductDao;
 import ua.advanced.domain.Product;
-import ua.advanced.utils.ConnectionUtils;
+import ua.advanced.shared.FactoryManager;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDaoImpl implements ProductDao {
 
-    private static String CREATE = "INSERT INTO product(name,description,price) VALUES (?,?,?)";
-    private static String READ_BY_ID = "SELECT*FROM product WHERE id = ?";
-    private static String READ_ALL = "SELECT*FROM product";
-    private static String UPDATE_BY_ID = "UPDATE product SET name=?, description=?, price=? WHERE id = ?";
-    private static String DELETE_BY_ID = "DELETE FROM product WHERE id=?";
-
     private static Logger logger = LogManager.getLogger(ProductDaoImpl.class);
+    private static EntityManager em = FactoryManager.getEntityManager();
 
     @Override
     public boolean create(Product product) {
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(CREATE)) {
-                prSt.setString(1, product.getName());
-                prSt.setString(2, product.getDescription());
-                prSt.setDouble(3, product.getPrice());
-                prSt.executeUpdate();
+        EntityTransaction et = null;
+        try {
+            et = em.getTransaction();
+            et.begin();
+            em.persist(product);
+            et.commit();
+        } catch (Exception e) {
+            if(et!=null){
+                et.rollback();
             }
-        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                                        | IllegalAccessException |ClassNotFoundException e) {
-            logger.error(e);
+            e.printStackTrace();
         }
         return true;
     }
@@ -43,19 +37,9 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product read(int id) {
         Product product = null;
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(READ_BY_ID)) {
-                prSt.setInt(1, id);
-                try (ResultSet resultSet = prSt.executeQuery()) {
-                    resultSet.next();
-                    String name = resultSet.getString("name");
-                    String description = resultSet.getString("description");
-                    Double price = resultSet.getDouble("price");
-                    product = new Product(id, name, description, price);
-                }
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                                       | IllegalAccessException |ClassNotFoundException e) {
+        try {
+            product = em.find(Product.class,id);
+        } catch (Exception e) {
             logger.error(e);
         }
         return product;
@@ -64,20 +48,10 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> readAll() {
         List<Product> productList = new ArrayList<>();
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(READ_ALL)) {
-                try (ResultSet resultSet = prSt.executeQuery()) {
-                    while (resultSet.next()) {
-                        Integer id = resultSet.getInt("id");
-                        String name = resultSet.getString("name");
-                        String description = resultSet.getString("description");
-                        Double price = resultSet.getDouble("price");
-                        productList.add(new Product(id, name, description, price));
-                    }
-                }
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
+        try {
+            TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p", Product.class);
+            productList = query.getResultList();
+        }catch (Exception e) {
             logger.error(e);
         }
         return productList;
@@ -85,30 +59,23 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product update(Product product) {
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(UPDATE_BY_ID)) {
-                prSt.setString(1, product.getName());
-                prSt.setString(2, product.getDescription());
-                prSt.setDouble(3, product.getPrice());
-                prSt.setInt(4, product.getId());
-                prSt.executeUpdate();
-            }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
-            logger.error(e);
-        }
         return null;
     }
 
     @Override
     public void delete(int id) {
-        try (Connection connection = ConnectionUtils.openConnection()) {
-            try (PreparedStatement prSt = connection.prepareStatement(DELETE_BY_ID)) {
-                prSt.setInt(1, id);
-                prSt.executeUpdate();
+        EntityTransaction et = null;
+        Product product = null;
+        try {
+            et = em.getTransaction();
+            et.begin();
+            product = em.find(Product.class, id);
+            em.remove(product);
+            et.commit();
+        }catch (Exception e) {
+            if(et!=null){
+                et.rollback();
             }
-        }catch (InstantiationException | InvocationTargetException | NoSuchMethodException | SQLException
-                | IllegalAccessException |ClassNotFoundException e) {
             logger.error(e);
         }
     }
