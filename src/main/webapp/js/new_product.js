@@ -1,6 +1,6 @@
 $('button.create').click(function () {
     validateRegistration();
-})
+});
 
 function displaySuccessAlert() {
     $(".alert.alert-success").show();
@@ -49,20 +49,16 @@ function validateRegistration() {
             price: price.val(),
             description: description.val()
         };
-        $.ajax({
-            type: 'POST',
-            url: "product",
-            data: newProduct,
-            success: [function (data) {
-                if (data == "successful") {
+        $.post( "product", newProduct)
+            .done(function (data) {
+                alert(data);
+                if (data == "success") {
                     $('.product-form').trigger('reset');
                     displaySuccessAlert();
                 }else{
                     displayDangerAlert();
                 }
-            }]
         });
-        return true;
     }
 }
 
@@ -96,4 +92,3 @@ $(function() {
         }
     });
 });
-
