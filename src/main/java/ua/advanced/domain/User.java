@@ -8,6 +8,7 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Column(name = "email", nullable = false)
     private String email;
@@ -21,10 +22,10 @@ public class User {
     private String password;
 
     public User(){
-
     }
 
-    public User(String email, String first_name, String last_name, String role, String password) {
+    public User(Integer id, String email, String first_name, String last_name, String role, String password){
+        this.id = id;
         this.email = email;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -32,8 +33,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer id, String email, String first_name, String last_name, String role, String password) {
-        this.id = id;
+    public User(String email, String first_name, String last_name, String role, String password) {
         this.email = email;
         this.first_name = first_name;
         this.last_name = last_name;

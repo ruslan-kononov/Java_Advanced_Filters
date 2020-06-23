@@ -9,11 +9,14 @@ import java.util.Objects;
 public class Bucket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
-    @Column(name = "user_id")
-    private Integer userId;
-    @Column(name = "product_id")
-    private Integer productId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
     @Column(name = "purchase_date")
     private Date purchaseDate;
     @Column(name = "quantity")
@@ -21,17 +24,9 @@ public class Bucket {
 
     public Bucket(){}
 
-    public Bucket(Integer id, Integer userId, Integer productId, Date purchaseDate, Integer quantity) {
-        this.id = id;
-        this.userId = userId;
-        this.productId = productId;
-        this.purchaseDate = purchaseDate;
-        this.quantity = quantity;
-    }
-
-    public Bucket(Integer userId, Integer productId, Date purchaseDate, Integer quantity) {
-        this.userId = userId;
-        this.productId = productId;
+    public Bucket(User user, Product product, Date purchaseDate, Integer quantity) {
+        this.user = user;
+        this.product = product;
         this.purchaseDate = purchaseDate;
         this.quantity = quantity;
     }
@@ -44,20 +39,20 @@ public class Bucket {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Date getPurchaseDate() {
@@ -82,23 +77,23 @@ public class Bucket {
         if (o == null || getClass() != o.getClass()) return false;
         Bucket bucket = (Bucket) o;
         return Objects.equals(id, bucket.id) &&
-                Objects.equals(userId, bucket.userId) &&
-                Objects.equals(productId, bucket.productId) &&
+                Objects.equals(user, bucket.user) &&
+                Objects.equals(product, bucket.product) &&
                 Objects.equals(purchaseDate, bucket.purchaseDate) &&
                 Objects.equals(quantity, bucket.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, productId, purchaseDate, quantity);
+        return Objects.hash(id, user, product, purchaseDate, quantity);
     }
 
     @Override
     public String toString() {
         return "Bucket{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", productId=" + productId +
+                ", user=" + user +
+                ", product=" + product +
                 ", purchaseDate=" + purchaseDate +
                 ", quantity=" + quantity +
                 '}';

@@ -8,24 +8,18 @@ import java.util.Objects;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "name")
+    @Column(name = "description")
     private String description;
-    @Column(name = "name", nullable = false)
+    @Column(name = "price", nullable = false)
     private Double price;
 
     public Product(){}
 
     public Product(String name, String description, Double price) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
-
-    public Product(Integer id, String name, String description, Double price) {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
