@@ -15,7 +15,7 @@ public class ProductFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        filterService.doFilterValidation(request,response,chain,Arrays.asList(UserRole.USER));
+        filterService.doFilterValidation(request,response,chain,Arrays.asList(UserRole.USER, UserRole.ADMINISTRATOR));
     }
 
     public void init(FilterConfig config) throws ServletException {

@@ -1,12 +1,8 @@
 package ua.advanced.servlets;
 
 import ua.advanced.domain.Product;
-import ua.advanced.domain.User;
-import ua.advanced.domain.UserRole;
 import ua.advanced.service.ProductService;
-import ua.advanced.service.UserService;
 import ua.advanced.service.impl.ProductServiceImpl;
-import ua.advanced.service.impl.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,17 +16,16 @@ public class ProductServlet extends HttpServlet {
     private ProductService productService = ProductServiceImpl.getProductService();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String firstName = request.getParameter("productName");
+        String productName = request.getParameter("productName");
         String price = request.getParameter("price");
         String description = request.getParameter("description");
 
-        if (!firstName.isEmpty() && !price.isEmpty() && !description.isEmpty()) {
-            productService.create(new Product(firstName,description,Double.valueOf(price)));
+        if (!productName.isEmpty() && !price.isEmpty() && !description.isEmpty()) {
+            productService.create(new Product(productName,description,Double.valueOf(price)));
 
-            String text = "successful";
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(text);
+            response.getWriter().write("success");
         }
     }
 
